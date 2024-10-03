@@ -10,28 +10,28 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @Controller
 public class LoadTestController {
 
-    @GetMapping("/loaderio-1d3b4ed9ec53cc97e4767fdb8309cb02")
-    public ResponseEntity<FileSystemResource> downloadTextFile() {
+    @GetMapping("/loaderio-1d3b4ed9ec53cc97e4767fdb8309cb02/")
+    public ResponseEntity<String> getTextFileContent() {
         // Specify the path to your text file
-        File file = new File("loaderio-1d3b4ed9ec53cc97e4767fdb8309cb02.txt");
+        Path filePath = Paths.get("loaderio-1d3b4ed9ec53cc97e4767fdb8309cb02.txt");
 
-        if (!file.exists()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        try {
+            // Read the content of the file
+            String content = Files.readString(filePath);
+            return ResponseEntity.ok()
+                    .contentType(org.springframework.http.MediaType.TEXT_PLAIN)
+                    .body(content);
+        } catch (IOException e) {
+            // Handle the case where the file does not exist or cannot be read
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File not found");
         }
-
-        // Create the response entity
-        FileSystemResource resource = new FileSystemResource(file);
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + file.getName());
-
-        return ResponseEntity.ok()
-                .headers(headers)
-                .contentLength(file.length())
-                .contentType(MediaType.TEXT_PLAIN)
-                .body(resource);
     }
 }
