@@ -12,7 +12,7 @@ COPY src ./src
 RUN mvn package -DskipTests
 
 # Use a minimal JRE image to run the application
-FROM openjdk:17-jre-slim
+FROM eclipse-temurin:17-jre
 
 # Set the working directory
 WORKDIR /app
