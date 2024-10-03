@@ -1,5 +1,5 @@
-# Use a base image that includes Java
-FROM openjdk:17-jdk-slim AS build
+# Use a base image that includes Maven and JDK for building
+FROM maven:3.8.4-openjdk-17-slim AS build
 
 # Set the working directory
 WORKDIR /app
@@ -9,7 +9,7 @@ COPY pom.xml .
 COPY src ./src
 
 # Build the application
-RUN ./mvnw package -DskipTests
+RUN mvn package -DskipTests
 
 # Use a minimal JRE image to run the application
 FROM openjdk:17-jre-slim
@@ -18,7 +18,7 @@ FROM openjdk:17-jre-slim
 WORKDIR /app
 
 # Copy the built JAR file from the previous stage
-COPY --from=build /app/target/gcrun-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=build /app/target/*.jar app.jar
 
 # Expose the port the app runs on
 EXPOSE 8080
