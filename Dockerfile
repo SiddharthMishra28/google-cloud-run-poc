@@ -7,7 +7,7 @@ WORKDIR /app
 # Copy the Maven project files
 COPY pom.xml .
 COPY src ./src
-COPY loaderio-82dabe8c103281297ffa93c9ca529699.txt ./
+COPY loaderio-1d3b4ed9ec53cc97e4767fdb8309cb02.txt ./
 
 # Build the application
 RUN mvn package -DskipTests
