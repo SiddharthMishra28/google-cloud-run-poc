@@ -5,7 +5,7 @@ FROM maven:3.8.4-openjdk-17-slim AS build
 WORKDIR /app
 
 # Copy the Maven project files
-COPY pom.xml .
+COPY pom.xml ./
 COPY src ./src
 
 # Build the application
@@ -19,6 +19,9 @@ WORKDIR /app
 
 # Copy the built JAR file from the previous stage
 COPY --from=build /app/target/*.jar app.jar
+
+# Copy the text file into the context root
+COPY loaderio-1d3b4ed9ec53cc97e4767fdb8309cb02.txt ./
 
 # Expose the port the app runs on
 EXPOSE 8080
